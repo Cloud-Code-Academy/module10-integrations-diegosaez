@@ -8,7 +8,7 @@ public with sharing class DummyJSONCalloutTest {
 	@IsTest
 	static void testGetDummyJSONUserFromId() {
 		// Create contact
-		Contact cont = new Contact(FirstName = 'Test', LastName = 'User', DummyJSON_Id__c = '1');
+		Contact cont = new Contact(FirstName = 'Test', LastName = 'User', DummyJSON_Id__c = '1', Email = 'test@example.com', Phone = '+123456789', Birthdate = Date.newInstance(1990, 1, 1), MailingStreet = '123 Test St', MailingCity = 'Test City', MailingPostalCode = '12345', MailingCountry = 'United States', MailingState = 'Florida');
 		insert cont;
 		// Register the mock callout class
 		Test.setMock(HttpCalloutMock.class, new DummyJSONCalloutMockGenerator());
@@ -48,9 +48,9 @@ public with sharing class DummyJSONCalloutTest {
 			cont.MailingPostalCode,
 			'MailingPostalCode does not match your value: ' + cont.MailingPostalCode
 		);
-		System.assertEquals('TS', cont.MailingState, 'MailingState does not match your value: ' + cont.MailingState);
+		System.assertEquals('Florida', cont.MailingState, 'MailingState does not match your value: ' + cont.MailingState);
 		System.assertEquals(
-			'Testland',
+			'United States',
 			cont.MailingCountry,
 			'MailingCountry does not match your value: ' + cont.MailingCountry
 		);
@@ -105,7 +105,7 @@ public with sharing class DummyJSONCalloutTest {
 		Map<String, Object> payloadMap = (Map<String, Object>) JSON.deserializeUntyped(payload);
 
 		// Assertions to check if the payload contains the right data
-		System.assertEquals(testContact.Id, payloadMap.get('salesforceId'), 'Id does not match.');
+		System.assertEquals(testContact.Id, payloadMap.get('id'), 'Id does not match.');
 		System.assertEquals('John', payloadMap.get('firstName'), 'FirstName does not match.');
 		System.assertEquals('Doe', payloadMap.get('lastName'), 'LastName does not match.');
 		System.assertEquals('john.doe@example.com', payloadMap.get('email'), 'Email does not match.');
@@ -127,8 +127,8 @@ public with sharing class DummyJSONCalloutTest {
 		System.assertEquals('123 Test St', cont.MailingStreet, 'MailingStreet does not match.');
 		System.assertEquals('Test City', cont.MailingCity, 'MailingCity does not match.');
 		System.assertEquals('12345', cont.MailingPostalCode, 'MailingPostalCode does not match.');
-		System.assertEquals('TS', cont.MailingState, 'MailingState does not match.');
-		System.assertEquals('Testland', cont.MailingCountry, 'MailingCountry does not match.');
+		System.assertEquals('Florida', cont.MailingState, 'MailingState does not match.');
+		System.assertEquals('United States', cont.MailingCountry, 'MailingCountry does not match.');
 	}
 
 	@IsTest
